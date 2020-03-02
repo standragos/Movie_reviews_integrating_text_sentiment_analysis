@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from sentiment_analysis_package.models import User
 
 
 class RegistrationForm(FlaskForm):
@@ -9,6 +10,18 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
+
+    @staticmethod
+    def validate_username(username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That user name is already taken')
+
+    @staticmethod
+    def validate_email(email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is already taken')
 
 
 class LoginForm(FlaskForm):
@@ -19,6 +32,6 @@ class LoginForm(FlaskForm):
 
 
 class AddReview(FlaskForm):
-    movieName = StringField('Movie name', validators=[DataRequired()])
-    review = StringField('review', validators=[DataRequired()])
+    movie_name = StringField('Movie name', validators=[DataRequired()])
+    review = StringField('review', validators=[DataRequired(), Length(min=30)])
     submit = SubmitField('submit your review')

@@ -25,4 +25,4 @@ label = {0: 'negative', 1: 'positive'}
 example = ['this movie was bad, the acting of the actors was not so good, everything was terrible about this movie'
            'i wont watch this movie again']
 X = vect.transform(example)
-print('Prediction: %s\nProbability: %.2f%%' % (label[clf.predict(X)[0]], np.max(clf.predict_proba(X))*100))
+# print('Prediction: %s\nProbability: %.2f%%' % (label[clf.predict(X)[0]], np.max(clf.predict_proba(X))*100))

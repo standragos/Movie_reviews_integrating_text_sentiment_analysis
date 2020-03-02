@@ -7,5 +7,11 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:E:\Proiect Licenta\movie classifier\Web-Flask\my_database.db</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="my_database [2]" uuid="70b4e3d0-1f06-4697-8ed1-61df3f93719e">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:E:\Proiect Licenta\movie classifier\sentiment_analysis_package\my_database.db</jdbc-url>
+    </data-source>
   </component>
 </project>
