@@ -16,3 +16,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()])
     rememberMe = BooleanField('remember me')
     submit = SubmitField('Log in')
+
+
+class AddReview(FlaskForm):
+    movieName = StringField('Movie name', validators=[DataRequired()])
+    review = StringField('review', validators=[DataRequired()])
+    submit = SubmitField('submit your review')

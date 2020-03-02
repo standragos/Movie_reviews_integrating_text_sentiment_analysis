@@ -22,6 +22,7 @@ vect = HashingVectorizer(decode_error='ignore', n_features=2**21, preprocessor=N
 clf = pickle.load(open(os.path.join(current_directory, 'pkl_objects', 'classifier.plk'), 'rb'))
 
 label = {0: 'negative', 1: 'positive'}
-example = ['good nice 10/10 will watch again for sure so good actors very very good']
+example = ['this movie was bad, the acting of the actors was not so good, everything was terrible about this movie'
+           'i wont watch this movie again']
 X = vect.transform(example)
 print('Prediction: %s\nProbability: %.2f%%' % (label[clf.predict(X)[0]], np.max(clf.predict_proba(X))*100))
