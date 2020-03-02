@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend class="border-bottom mb-4">Add a review for a movie</legend>
+
+                <div class="form-group">
+                    {{ form.movieName.label(class="form-control-label") }}
+                    {{ form.movieName(class="form-control form-control-lg") }}
+                </div>
+                 <div class="form-group">
+                     {{ form.review.label(class="form-control-label") }}
+                     {{ form.review(class="form-control form-control-lg") }}
+                 </div>
+
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-info") }}
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+{% endblock content %}
