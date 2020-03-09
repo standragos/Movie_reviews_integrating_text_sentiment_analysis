@@ -11,16 +11,16 @@
                  </div>
 
                 <div class="form-group">
-                    {{ form.review.label(class="form-control-label") }}
-                    {% if form.review.errors %}
-                        {{ form.review(class="form-control form-control-lg is-invalid") }}
+                    {{ form.content.label(class="form-control-label") }}
+                    {% if form.content.errors %}
+                        {{ form.content(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.review.errors %}
+                            {% for error in form.content.errors %}
                                 <span> {{ error }} </span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.review(class="form-control form-control-lg") }}
+                        {{ form.content(class="form-control form-control-lg") }}
                     {% endif %}
 
                 </div>
