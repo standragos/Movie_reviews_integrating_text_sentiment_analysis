@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-    {% for post in posts %}
+    {% for review in reviews|reverse %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
+              <a class="mr-2" href="#"> This review was posted by: {{ review.author.username }}</a>
+              <small class="text-muted">on: {{ review.date_posted.strftime('%d-%m-%Y') }}</small>
             </div>
-            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-            <div class="w-25 p-3" style="background-color: #eee;">This review has a rating of: {{ post.rating }}</div>
+            <h2><a class="article-title" href="{{ url_for('review', review_id=review.id) }}">{{ review.movie_name }}</a></h2>
+            <p class="article-content">{{ review.content }}</p>
+            <div class="w-25 p-3" style="background-color: #eee;">This review has a rating of: {{ review.rating }}</div>
           </div>
         </article>
     {% endfor %}

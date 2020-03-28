@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <p>The movie list is:</p>
+    {% for review in movie_names %}
+            <div class="article-metadata">
+                {{ review }} with an average rating of: {{ ratings[loop.index-1] }} </a>
+            </div>
+    {% endfor %}
+{% endblock content %}

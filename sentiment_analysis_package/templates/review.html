@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="#"> This review was posted by: {{ review.author.username }}</a>
+          <small class="text-muted">on: {{ review.date_posted.strftime('%d-%m-%Y') }}</small>
+        </div>
+        <h2 class="article-title">{{ review.movie_name }}</h2>
+        <p class="article-content">{{ review.content }}</p>
+        <div class="w-25 p-3" style="background-color: #eee;">This review has a rating of: {{ review.rating }}</div>
+      </div>
+      <h2><a class="article-title" href="{{ url_for('update_review', review_id=review.id) }}">Update review</a></h2>
+    </article>
+{% endblock content %}
