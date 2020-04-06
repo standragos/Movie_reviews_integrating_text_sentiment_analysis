@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request, abort
-from sentiment_analysis_package import app, db, bcrypt
+from sentiment_analysis_package import app, db
 from sentiment_analysis_package.forms import RegistrationForm, LoginForm, AddReview, UpdateInformation
 import Classification.movie_classifier.vectorizer as vctrz
 from sentiment_analysis_package.models import User, Review
@@ -14,13 +14,18 @@ import numpy as np
 def get_movie_rating(form):
     x = vctrz.vect.transform([form.content.data])
     my_classifier = vctrz.clf
-    probability = str(round(vctrz.np.max(my_classifier.predict_proba(x)) * 10, 1))
+    rating = str(round(vctrz.np.max(my_classifier.predict_proba(x)) * 10, 1))
     label = {0: 'negative', 1: 'positive'}
     if label[my_classifier.predict(x)[0]] == 'positive':
-        probability = round(vctrz.np.max(my_classifier.predict_proba(x)) * 10, 1)
+        rating = round(vctrz.np.max(my_classifier.predict_proba(x)) * 10, 1)
     else:
-        probability = round(10 - vctrz.np.max(my_classifier.predict_proba(x)) * 10, 1)
-    return probability
+        rating = round(10 - vctrz.np.max(my_classifier.predict_proba(x)) * 10, 1)
+    return rating
+
+
+def swap_positions(list, pos1, pos2):
+    list[pos1], list[pos2] = list[pos2], list[pos1]
+    return list
 
 
 @app.route('/')
@@ -33,11 +38,6 @@ def index():
 def home():
     reviews = Review.query.all()
     return render_template('home.html', reviews=reviews)
-
-
-@app.route("/about")
-def about():
-    return render_template('about.html', title='about')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -144,8 +144,7 @@ def top_movies():
     reviews = Review.query.all()
     movie_names = []
     movie_name_set = set()
-    final_movie_list = []
-    final_rating_list = []
+    final = []
     for each_review in reviews:
         movie_names.append(each_review.movie_name)
         movie_names.append(each_review.rating)
@@ -159,8 +158,22 @@ def top_movies():
                 contor = contor + 1
                 sum = sum + float(movie_names[j + 1])
 
-        final_movie_list.append(val)
-        final_rating_list.append(round(sum / contor, 1))
+        final.append(val)
+        final.append(sum / contor)
 
-    return render_template('top_movies.html', title='Top movies', movie_names=final_movie_list,
-                           ratings=final_rating_list)
+    n = len(final)
+
+    for i in range(1, n, 2):
+        for j in range(i + 2, n, 2):
+            if final[i] < final[j]:
+                swap_positions(final, i, j)
+                swap_positions(final, i - 1, j - 1)
+
+    final_movie_names = []
+    final_ratings = []
+    for i in range(0, n, 2):
+        final_movie_names.append(final[i])
+        final_ratings.append(final[i + 1])
+
+    return render_template('top_movies.html', title='Top movies', movie_names=final_movie_names,
+                           ratings=final_ratings)

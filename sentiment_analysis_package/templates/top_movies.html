@@ -1,9 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
-    <p>The movie list is:</p>
+    <div class="media-body", align="center", style="font-size: 25px">
+    TOP MOVIES BASED ON USER REVIEWS
+    </div>
+    <p></p>
     {% for review in movie_names %}
-            <div class="article-metadata">
-                {{ review }} with an average rating of: {{ ratings[loop.index-1] }} </a>
+            <div class="article-title">
+               <h2> {{ loop.index }}. {{ review }} </h2>  With an average rating of: {{ ratings[loop.index-1] }}.
+
             </div>
     {% endfor %}
 {% endblock content %}
