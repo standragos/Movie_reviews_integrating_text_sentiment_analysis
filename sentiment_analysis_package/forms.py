@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from sentiment_analysis_package.models import User
+from sentiment_analysis_package.models import User, Review
 from flask_login import current_user
 
 
@@ -31,7 +31,10 @@ class LoginForm(FlaskForm):
 
 
 class AddReview(FlaskForm):
-    movie_name = StringField('Movie name', validators=[DataRequired()])
+    reviews = Review.query.all()
+    choice = set([(i.movie_name, i.movie_name) for i in reviews])
+
+    movie_name = SelectField(u'Movie name', choices=choice, validators=[DataRequired()])
     content = TextAreaField('Review content', validators=[DataRequired(), Length(min=30)])
     submit = SubmitField('submit your review')
 

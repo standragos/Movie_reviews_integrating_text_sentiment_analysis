@@ -78,6 +78,7 @@ def login():
 @app.route("/addReview", methods=['GET', 'POST'])
 @login_required
 def add_review():
+
     form = AddReview()
     if form.validate_on_submit():
         probability = get_movie_rating(form)
