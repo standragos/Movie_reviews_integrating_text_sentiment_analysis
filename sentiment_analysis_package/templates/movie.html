@@ -1,5 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+            Movie name: {{ movie.movie_name }}
+        </div>
+        <h2 class="article-title">{{ movie.movie_name }}</h2>
+        <p class="article-content">descrierea: {{ movie.description }}</p>
+
+      </div>
+    </article>
     {% for review in reviews|reverse %}
         <article class="media content-section">
           <div class="media-body">

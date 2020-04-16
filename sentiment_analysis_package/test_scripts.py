@@ -43,7 +43,7 @@ print(user.posts)
 
 my_list = User.query.all()
 print(my_list)
-'''
+
 
 
 # Swap function
@@ -90,3 +90,9 @@ for i in range(0, n, 2):
 print(final)
 print(final_movie_names)
 print(final_ratings)
+'''
+
+from sentiment_analysis_package.models import User, Review, Movie
+
+movies = Movie.query.all()
+print(movies)

@@ -1,9 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from sentiment_analysis_package import app, db
-from sentiment_analysis_package.forms import RegistrationForm, LoginForm, AddReview, UpdateInformation
+from sentiment_analysis_package.forms import RegistrationForm, LoginForm, AddReview, UpdateInformation, AddMovie
 import Classification.movie_classifier.vectorizer as vctrz
-from sentiment_analysis_package.models import User, Review
+from sentiment_analysis_package.models import User, Review, Movie
 from flask_login import login_user, current_user, logout_user, login_required
+from sqlalchemy.orm import load_only, session
 import numpy as np
 # TO DO:
 # - create a new route (/addReview) in which the user, or anybody can add a review, and after a button is pressed you
@@ -37,7 +38,8 @@ def index():
 @app.route('/home')
 def home():
     reviews = Review.query.all()
-    return render_template('home.html', reviews=reviews)
+    movies = Movie.query.all()
+    return render_template('home.html', reviews=reviews, movies=movies)
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -75,14 +77,38 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
+@app.route("/addMovie", methods=['GET', 'POST'])
+@login_required
+def add_movie():
+    form = AddMovie()
+    movies = Movie.query.all()
+    movie_names = []
+    for each_movie in movies:
+        movie_names.append(each_movie.movie_name)
+
+    if form.validate_on_submit():
+        description = form.description.data
+        rating = form.rating.data
+        movie_name = form.movie_name.data
+        if movie_name in movie_names:
+            flash('Movie already exists in the database!', 'danger')
+            return redirect(url_for('add_movie'))
+        movie = Movie(movie_name=movie_name, description=description, rating=rating)
+        db.session.add(movie)
+        db.session.commit()
+        # flash('Based on other reviews, this review has a rating of:' + ' - ' + str(probability), 'success')
+        return redirect(url_for('home'))
+    return render_template('add_movie.html', title='Add a movie', form=form)
+
+
 @app.route("/addReview", methods=['GET', 'POST'])
 @login_required
 def add_review():
-
     form = AddReview()
+    form.movie_name.choices = set([(i.movie_name, i.movie_name) for i in Movie.query.all()])
     if form.validate_on_submit():
         probability = get_movie_rating(form)
-        review = Review(movie_name=form.movie_name.data, content=form.content.data, author=current_user,
+        review = Review(movie_id=form.movie_name.data, content=form.content.data, author=current_user,
                         rating=probability)
         db.session.add(review)
         db.session.commit()
@@ -147,9 +173,9 @@ def top_movies():
     movie_name_set = set()
     final = []
     for each_review in reviews:
-        movie_names.append(each_review.movie_name)
+        movie_names.append(each_review.movie_id)
         movie_names.append(each_review.rating)
-        movie_name_set.add(each_review.movie_name)
+        movie_name_set.add(each_review.movie_id)
 
     for i, val in enumerate(movie_name_set):
         sum = 0
@@ -178,3 +204,13 @@ def top_movies():
 
     return render_template('top_movies.html', title='Top movies', movie_names=final_movie_names,
                            ratings=final_ratings)
+
+
+@app.route("/movie/<int:movie_id>")
+def movie(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+    movie_name = movie.movie_name
+    reviews = Review.query.filter(Review.movie_id.like(str(movie_name)))
+
+    return render_template('movie.html', title='movie.movie_name', movie=movie, reviews=reviews)
+
