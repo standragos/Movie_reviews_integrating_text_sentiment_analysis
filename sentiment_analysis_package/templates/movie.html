@@ -1,25 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
-    <article class="media content-section">
-      <div class="media-body">
-        <div class="article-metadata">
-            Movie name: {{ movie.movie_name }}
-        </div>
+    <article class="media content-section", style="background-color:lightcyan">
+      <div class="container-fluid">
         <h2 class="article-title">{{ movie.movie_name }}</h2>
-        <p class="article-content">descrierea: {{ movie.description }}</p>
+        <p class="article-content"><h5>A short description:</h5> {{ movie.description }}</p>
 
       </div>
     </article>
+    <h3>Reviews added for this movie:</h3>
     {% for review in reviews|reverse %}
         <article class="media content-section">
           <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#"> This review was posted by: {{ review.author.username }}</a>
-              <small class="text-muted">on: {{ review.date_posted.strftime('%d-%m-%Y') }}</small>
-            </div>
-            <h2><a class="article-title" href="{{ url_for('review', review_id=review.id) }}">{{ review.movie_id }}</a></h2>
             <p class="article-content">{{ review.content }}</p>
             <div class="w-25 p-3" style="background-color: #eee;">This review has a rating of: {{ review.rating }}</div>
+               Posted by: {{ review.author.username }}
           </div>
         </article>
     {% endfor %}

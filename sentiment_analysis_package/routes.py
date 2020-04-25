@@ -88,12 +88,11 @@ def add_movie():
 
     if form.validate_on_submit():
         description = form.description.data
-        rating = form.rating.data
         movie_name = form.movie_name.data
         if movie_name in movie_names:
             flash('Movie already exists in the database!', 'danger')
             return redirect(url_for('add_movie'))
-        movie = Movie(movie_name=movie_name, description=description, rating=rating)
+        movie = Movie(movie_name=movie_name, description=description)
         db.session.add(movie)
         db.session.commit()
         # flash('Based on other reviews, this review has a rating of:' + ' - ' + str(probability), 'success')
@@ -108,8 +107,10 @@ def add_review():
     form.movie_name.choices = set([(i.movie_name, i.movie_name) for i in Movie.query.all()])
     if form.validate_on_submit():
         probability = get_movie_rating(form)
-        review = Review(movie_id=form.movie_name.data, content=form.content.data, author=current_user,
-                        rating=probability)
+        movie_id = Movie.query.filter(Movie.movie_name == form.movie_name.data).first().id
+        movie_name = Movie.query.filter(Movie.id == movie_id).first().movie_name
+        review = Review(movie_id=movie_id, content=form.content.data, author=current_user,
+                        rating=probability, movie_name=movie_name)
         db.session.add(review)
         db.session.commit()
         # flash('Based on other reviews, this review has a rating of:' + ' - ' + str(probability), 'success')
@@ -173,9 +174,9 @@ def top_movies():
     movie_name_set = set()
     final = []
     for each_review in reviews:
-        movie_names.append(each_review.movie_id)
+        movie_names.append(each_review.movie_name)
         movie_names.append(each_review.rating)
-        movie_name_set.add(each_review.movie_id)
+        movie_name_set.add(each_review.movie_name)
 
     for i, val in enumerate(movie_name_set):
         sum = 0
@@ -209,8 +210,7 @@ def top_movies():
 @app.route("/movie/<int:movie_id>")
 def movie(movie_id):
     movie = Movie.query.get_or_404(movie_id)
-    movie_name = movie.movie_name
-    reviews = Review.query.filter(Review.movie_id.like(str(movie_name)))
+    reviews = Review.query.filter(Review.movie_id.like(str(movie_id)))
 
     return render_template('movie.html', title='movie.movie_name', movie=movie, reviews=reviews)
 

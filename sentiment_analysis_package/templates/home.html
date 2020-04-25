@@ -4,10 +4,10 @@
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#"> This review was posted by: {{ review.author.username }}</a>
+              <a class="mr-2" href="{{ url_for('review', review_id=review.id) }}"> Posted by: {{ review.author.username }}</a>
               <small class="text-muted">on: {{ review.date_posted.strftime('%d-%m-%Y') }}</small>
             </div>
-            <h2><a class="article-title" href="{{ url_for('review', review_id=review.id) }}">{{ review.movie_id }}</a></h2>
+            <h2><a class="article-title" href="{{ url_for('movie', movie_id=review.movie_id) }}">{{review.movie_name}}</a></h2>
             <p class="article-content">{{ review.content }}</p>
             <div class="w-25 p-3" style="background-color: #eee;">This review has a rating of: {{ review.rating }}</div>
           </div>

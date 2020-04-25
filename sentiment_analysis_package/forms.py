@@ -35,7 +35,6 @@ class LoginForm(FlaskForm):
 class AddMovie(FlaskForm):
     movie_name = StringField('movie name:', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    rating = StringField('rating:')
     submit = SubmitField('add movie')
 
 

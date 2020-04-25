@@ -27,6 +27,7 @@ class Review(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     rating = db.Column(db.Float, nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
+    movie_name = db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return f"Review('{self.movie_id}', '{self.date_posted}, '{self.rating}')"
@@ -36,12 +37,7 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     movie_name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
     reviews = db.relationship('Review', backref='review', lazy=True)
 
     def __repr__(self):
-        return f"Movie('{self.movie_name}', '{self.description}, '{self.rating}')"
-
-
-
-
+        return f"Movie('{self.movie_name}', '{self.description}')"
