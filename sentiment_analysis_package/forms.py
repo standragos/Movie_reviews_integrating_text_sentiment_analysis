@@ -47,18 +47,17 @@ class AddReview(FlaskForm):
     submit = SubmitField('submit your review')
 
 
-
 class UpdateInformation(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=5, max=15)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Update account')
-
 
     def validate_username(self, username):
         if username.data != current_user.username:
             user = User.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError('That user name is already taken')
+
 
     def validate_email(self, email):
         if email.data != current_user.email:
