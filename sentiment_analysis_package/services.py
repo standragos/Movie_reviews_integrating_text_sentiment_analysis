@@ -50,8 +50,19 @@ def get_top_movies(reviews):
 
     final_movie_names = []
     final_ratings = []
+    final_ratings_rounded = []
     for i in range(0, n, 2):
         final_movie_names.append(final[i])
         final_ratings.append(final[i + 1])
+        final_ratings_rounded.append(int(round(final[i + 1])))
+    return final_movie_names, final_ratings, final_ratings_rounded
 
-    return final_movie_names, final_ratings
+
+def get_average_rating(reviews):
+    ratings = []
+    x = 0
+    for each_review in reviews:
+        ratings.append(each_review.rating)
+        x = x + 1
+    average = sum(ratings) / len(ratings)
+    return average, x

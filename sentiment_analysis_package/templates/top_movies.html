@@ -6,8 +6,25 @@
     <p></p>
     {% for review in movie_names %}
             <div class="article-title">
-               <h2> {{ loop.index }}. {{ review }} </h2>  With an average rating of: {{ ratings[loop.index-1] }}.
-
+                <h2> {{ loop.index }}. {{ review }} </h2> {{ ratings[loop.index-1] }}
+                <head>
+            <!-- Font Awesome Icon Library -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <style>
+            .checked {
+              color: orange;
+            }
+            </style>
+          </head>
+        <body>
+            {{average}}
+            {% for _ in range(0, rounded[loop.index-1]) %}
+            <span class="fa fa-star checked"></span>
+            {% endfor %}
+            {% for _ in range(0, 10-rounded[loop.index-1]) %}
+            <span class="fa fa-star"></span>
+            {% endfor %}
+        </body>
             </div>
     {% endfor %}
 {% endblock content %}

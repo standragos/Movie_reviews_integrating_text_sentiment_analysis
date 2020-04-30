@@ -3,7 +3,7 @@ from sentiment_analysis_package import app, db
 from sentiment_analysis_package.forms import RegistrationForm, LoginForm, AddReview, UpdateInformation, AddMovie
 from sentiment_analysis_package.models import User, Review, Movie
 from flask_login import login_user, current_user, logout_user, login_required
-from sentiment_analysis_package.services import get_movie_rating, get_top_movies
+from sentiment_analysis_package.services import get_movie_rating, get_top_movies, get_average_rating
 
 # TO DO:
 # - create a new route (/addReview) in which the user, or anybody can add a review, and after a button is pressed you
@@ -151,9 +151,9 @@ def update_review(review_id):
 @app.route("/top_movies")
 def top_movies():
     reviews = Review.query.all()
-    final_movie_names, final_ratings = get_top_movies(reviews)
+    final_movie_names, final_ratings, final_ratings_rounded = get_top_movies(reviews)
     return render_template('top_movies.html', title='Top movies', movie_names=final_movie_names,
-                           ratings=final_ratings)
+                           ratings=final_ratings, rounded = final_ratings_rounded)
 
 
 @app.route("/movie/<int:movie_id>")
@@ -161,5 +161,8 @@ def movie(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     reviews = Review.query.filter(Review.movie_id.like(str(movie_id)))
 
-    return render_template('movie.html', title='movie.movie_name', movie=movie, reviews=reviews)
+    average, lung = get_average_rating(reviews)
+    intavg = int(round(average))
+    return render_template('movie.html', title='movie.movie_name', movie=movie, reviews=reviews, average=average,
+                           lung=lung, intavg = intavg)
 
