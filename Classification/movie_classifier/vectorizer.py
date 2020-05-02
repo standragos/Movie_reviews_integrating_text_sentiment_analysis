@@ -4,8 +4,8 @@ import re
 import numpy as np
 from sklearn.feature_extraction.text import HashingVectorizer
 
-current_directory = os.path.dirname(__file__)
-stop = pickle.load(open(os.path.join(current_directory, 'pkl_objects', 'stopwords.pkl'), 'rb'))
+directory = os.path.dirname(__file__)
+stop = pickle.load(open(os.path.join(directory, 'pkl_objects', 'stopwords.pkl'), 'rb'))
 
 
 def tokenizer(text):
@@ -19,7 +19,7 @@ def tokenizer(text):
 
 vect = HashingVectorizer(decode_error='ignore', n_features=2**21, preprocessor=None, tokenizer=tokenizer)
 
-clf = pickle.load(open(os.path.join(current_directory, 'pkl_objects', 'classifier.plk'), 'rb'))
+clf = pickle.load(open(os.path.join(directory, 'pkl_objects', 'classifier.plk'), 'rb'))
 
 label = {0: 'negative', 1: 'positive'}
 example = ['this movie was bad, the acting of the actors was not so good, everything was terrible about this movie'
